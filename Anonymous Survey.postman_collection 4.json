@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "4f042d92-0c21-4dff-9600-12bd50a5607e",
+		"name": "Anonymous Survey",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18561551"
+	},
+	"item": [
+		{
+			"name": "create Survey",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"surveyName\": \"firstSurvey\",\n  \"questions\": [\n    {\n      \"description\": \"all good here\"\n    },\n    {\n      \"description\": \"not good here\"\n    },\n    {\n      \"description\": \"in the middle\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/v1/survey",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"survey"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "create Survey",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"surveyName\": \"firstSurvey\",\n  \"questions\": [\n    {\n      \"description\": \"all good here\"\n    },\n    {\n      \"description\": \"not good here\"\n    },\n    {\n      \"description\": \"in the middle\"\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/survey",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"survey"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\n  \"surveyName\": \"firstSurvey\",\n  \"questions\": [\n    {\n        \"questionId\": 1,\n      \"description\": \"all good here\"\n    },\n    {\n        \"questionId\": 2,\n      \"description\": \"not good here\"\n    },\n    {\n        \"questionId\": 3,\n      \"description\": \"in the middle\"\n    }\n  ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Survey Results",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/v1/survey/:survey_name/results",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"survey",
+						":survey_name",
+						"results"
+					],
+					"variable": [
+						{
+							"key": "survey_name",
+							"value": "firstSurvey"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Survey Results",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/survey/:survey_name/results",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"survey",
+								":survey_name",
+								"results"
+							],
+							"variable": [
+								{
+									"key": "survey_name",
+									"value": "firstSurvey"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\n  \"overAll\": {\n    \"numberOfSurveyTaken\": \"integer\",\n    \"positiveResponses\": \"integer\",\n    \"negativeResponses\": \"integer\"\n  },\n  \"breakUp\": [\n    {\n      \"questionId\": \"integer\",\n      \"description\": \"string\",\n      \"positiveResponses\": \"integer\",\n      \"negativeResponses\": \"integer\"      \n    }\n  ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Take Survey",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"questionId\": 1,\n        \"answer\": false\n    },\n    {\n        \"questionId\": 2,\n        \"answer\": false\n    },\n    {\n        \"questionId\": 3,\n        \"answer\": true\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/v1/survey/:survey_name",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"survey",
+						":survey_name"
+					],
+					"variable": [
+						{
+							"key": "survey_name",
+							"value": "firstSurvey"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Take Survey",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"questionId\": 1,\n        \"answer\": false\n    },\n    {\n        \"questionId\": 2,\n        \"answer\": false\n    },\n    {\n        \"questionId\": 3,\n        \"answer\": true\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/survey/:survey_name",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"survey",
+								":survey_name"
+							],
+							"variable": [
+								{
+									"key": "survey_name",
+									"value": "firstSurvey"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\"success\": true}"
+				}
+			]
+		}
+	]
+}

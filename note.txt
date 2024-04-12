@@ -1,0 +1,20 @@
+survey
+--------
+* survey_id -- primary key - uuid
+* survey_name-- string (should be unique)
+* total_survey_taken -- int
+* created_at - date time
+ 
+question
+---------
+* question_id -- int
+* survey_id -- uuid
+* question_description - string
+(survey_id + question_id) primary key
+ 
+survey_response
+----------------
+* id  -- uuid
+* survey_id -- uuid
+* question_id -- int
+* response_value -- boolean
