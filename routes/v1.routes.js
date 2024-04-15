@@ -54,11 +54,49 @@ Router.post("/survey/:survey_name",async(req,res)=>{
     }
 })
 
-Router.get("/:survey_name/results",async(req,res)=>{
+Router.get("/survey/:survey_name/results",async(req,res)=>{
     try {
+        const {survey_name} = req.params
+        const survey = await SurveyModel.findOne({survey_name:survey_name})
+        const totalSurvey = survey.total_survey_taken
         
+        const details = await SurveyModel.aggregate([{
+            $lookup:{
+                from:"responses",
+                localField:"_id",
+                foreignField:"survey_id",
+                as:"responses"
+            }
+        },{
+            $unwind:"$responses"
+        },{
+            $group:{
+                _id:"survey_id",
+                trueCount: { $sum: { $cond: [{ $eq: ["$responses.response_value", true] }, 1, 0] } }, // Count true values
+                falseCount: { $sum: { $cond: [{ $eq: ["$responses.response_value", false] }, 1, 0] } } // Count false values
+            }
+        }])
+        const question_breakup = await ResponseModel.aggregate([{
+            $group:{
+                _id:"$question_id",
+                
+                positiveResponses:{ $sum: { $cond: [{ $eq: ["$response_value", true] }, 1, 0] } },
+                negativeResponses:{ $sum: { $cond: [{ $eq: ["$response_value", false] }, 1, 0] } }
+            }
+        },{
+            $project:{questionId:"$_id",positiveResponses:1,negativeResponses:1,_id:0}
+        }])
+        let overAll={
+            numberOfSurveysTaken:totalSurvey,
+            positiveResponses:details[0].trueCount,
+            negativeResponses:details[0].falseCount,
+            breakUp:question_breakup
+        }
+        
+        res.status(200).json(overAll)
     } catch (error) {
-        
+        console.log(error)
+        res.status(500);
     }
 
 })
