@@ -1,4 +1,4 @@
-const createSurvey = (req,res,next)=>{
+const createSurveyValidator = (req,res,next)=>{
     try {
         const  {surveyName,questions} = req.body
         if(!surveyName) return res.status(400).json({Error:"Survey name and question cannot be empty"})
@@ -9,5 +9,5 @@ const createSurvey = (req,res,next)=>{
     }
 }
 module.exports = {
-    createSurvey
+    createSurveyValidator
 }
