@@ -1,11 +1,13 @@
-const c_surve_repo = require("../repository")
+const {createSurveyRepostory} = require("../repository/createsurvey")
 
 const createSurvey = async(req,res)=>{
     try {
       
-    let result = c_surve_repo(req.body);
+    let result = await createSurveyRepostory(req.body);
+    console.log(result);    
     res.status(200).json(result);
     } catch (error) {
+        console.log(error)
         res.status(500).json({"Error":"Interval server error"})
     }
     

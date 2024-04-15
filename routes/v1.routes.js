@@ -4,8 +4,8 @@ const { QuestionModel } = require("../models/questions.model");
 const { ResponseModel } = require("../models/response.model");
 const { createSurvey } = require("../handlers/createsurvey");
 const Router = express.Router();
-const create_survey_validator = require("../validators")
-Router.post("/survey",create_survey_validator,createSurvey);
+const {createSurveyValidator} = require("../validators/createsurvey")
+Router.post("/survey",createSurveyValidator,createSurvey);
 
 
 Router.post("/survey/:survey_name",async(req,res)=>{
