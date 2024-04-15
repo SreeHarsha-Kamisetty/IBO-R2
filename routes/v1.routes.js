@@ -1,5 +1,5 @@
 const express = require("express");
-const SurveyModel = require("../models/survey.models");
+const {SurveyModel} = require("../models/survey.models");
 const { QuestionModel } = require("../models/questions.model");
 const { ResponseModel } = require("../models/response.model");
 const { createSurvey } = require("../handlers/createsurvey");
@@ -11,8 +11,9 @@ Router.post("/survey",createSurveyValidator,createSurvey);
 Router.post("/survey/:survey_name",async(req,res)=>{
     try {
         const {survey_name} = req.params
+        
         const questions_array = req.body
-        const survey_details = await SurveyModel.find({survey_name:survey_name})
+        const survey_details = await SurveyModel.findOne({survey_name:survey_name})
         if(!survey_details) return res.status(404).json({Error:"Error survey not found"})
         const questions = await QuestionModel.find({survey_id:survey_details._id})
         
@@ -25,20 +26,22 @@ Router.post("/survey/:survey_name",async(req,res)=>{
         if(question_validation.length != questions.length) return res.status(400).json({Error:"Error some questions are missing or invalid"})
 
         const answer_validation = questions_array.filter(item => {
-            return (typeof item.answer == "boolean")
+            return (typeof item.answer === "boolean")
         })
-        
-        if(answer_validation.length != questions_array) return res.status(400).json({Error:"Answers can either be true or false"})
+        console.log(answer_validation)
+        console.log(questions_array)
+        if(answer_validation.length != questions_array.length) return res.status(400).json({Error:"Answers can either be true or false"})
 
-        questions_array = questions_array.map((item)=>{
+        let responses = questions_array.map((item)=>{
             let obj = {};
             obj.survey_id = survey_details._id
             obj.question_id = item.questionId
             obj.response_value = item.answer
             return obj;
         })
-        let new_response = await ResponseModel.insertMany({questions_array})
-        await SurveyModel.findByIdAndUpdate({_id:survey_details._id}, {$inc:{"$total_survey_taken":1}})
+        console.log(responses)
+        let new_response = await ResponseModel.insertMany(responses)
+        await SurveyModel.findByIdAndUpdate({_id:survey_details._id}, {$inc:{"total_survey_taken":1}})
 
         res.status(200).json({"status":"success"})
 
@@ -46,6 +49,7 @@ Router.post("/survey/:survey_name",async(req,res)=>{
 
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({"Error":"Interval server error"})
     }
 })
