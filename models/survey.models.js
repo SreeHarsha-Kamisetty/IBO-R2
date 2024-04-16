@@ -5,24 +5,29 @@
 // * total_survey_taken -- int
 // * created_at - date time
 
-const mongoose = require("mongoose")
+const { DataTypes } = require("sequelize")
+const { connection } = require("../db")
 
-const surveySchema = mongoose.Schema({
-    survey_name:{
-        type:String,
-        unique:true,
-    },
-    total_survey_taken:{
-        type:Number,
-        default:0
-    },
-    created_at:{
-        type:Date,
-        default: Date.now()
-    }
-})
 
-const SurveyModel = mongoose.model("survey", surveySchema)
+const surveySchema = {
+   survey_id:{
+    type:DataTypes.UUID,
+    primaryKey:true,
+   },
+   survey_name:{
+    type:DataTypes.STRING,
+    unique:true,
+   },
+   total_survey_taken:{
+    type:DataTypes.INTEGER,
+   },
+   created_at:{
+    type:DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+   }
+}
+
+const SurveyModel = connection.define("survey", surveySchema,{timestamps:false})
 
 module.exports = {
     SurveyModel

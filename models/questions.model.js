@@ -5,23 +5,22 @@
 // * question_description - string
 // (survey_id + question_id) primary key
 
-const mongoose = require("mongoose")
-
-const questionSchema = mongoose.Schema({
+const { DataTypes } = require("sequelize")
+const { connection } = require("../db")
+const questionSchema = {
     question_id:{
-        type:Number,
+        type: DataTypes.INTEGER
     },
     survey_id:{
-        type:mongoose.ObjectId,
-        ref:'survey'
+        type:DataTypes.UUID
     },
-    description:{
-        type:String,
-
+    question_description:{
+        type:DataTypes.STRING
     }
-})
+}
+const QuestionModel = connection.define("questions",questionSchema,{timestamps:false})
+QuestionModel.removeAttribute('id')
 
-const QuestionModel = mongoose.model("question", questionSchema)
 
 module.exports = {
     QuestionModel,
