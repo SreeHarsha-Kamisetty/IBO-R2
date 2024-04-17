@@ -13,6 +13,7 @@ const surveySchema = {
    survey_id:{
     type:DataTypes.UUID,
     primaryKey:true,
+    defaultValue: DataTypes.UUIDV4,
    },
    survey_name:{
     type:DataTypes.STRING,
@@ -20,6 +21,7 @@ const surveySchema = {
    },
    total_survey_taken:{
     type:DataTypes.INTEGER,
+    defaultValue:0
    },
    created_at:{
     type:DataTypes.DATE,

@@ -6,8 +6,9 @@ const createSurveyRepostory = async(data)=>{
     try {
         const  {surveyName,questions} = data
         
-    const new_survey = new SurveyModel({survey_name:surveyName})
-     await new_survey.save();
+    // const new_survey = new SurveyModel({survey_name:surveyName})
+    //  await new_survey.save();
+    const new_survey = await SurveyModel.create({survey_name:surveyName})
     
     const survey_id = new_survey._id
     
@@ -16,7 +17,7 @@ const createSurveyRepostory = async(data)=>{
         return {question_id:index+1,survey_id:survey_id};
     })
     
-    const Question_for_survey = await QuestionModel.insertMany(all_questions);
+    const Question_for_survey = await QuestionModel.bulkCreate(all_questions);
     const result ={
         surveryName:surveyName,
         questions:questions
