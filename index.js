@@ -15,11 +15,14 @@ app.get("/",(req,res)=>{
 
 app.listen(8080, async()=>{
     try {
-        await connection;
+       
+        await connection.authenticate();
+       
+        // await connection.sync({force:true})
         console.log("connected to DB")
         console.log(`Server running at port ${PORT}`)
     } catch (error) {
-        console.log("error")
+        console.log(error)
     }
    
 })

@@ -4,16 +4,29 @@
 // * survey_id -- uuid
 // * question_id -- int
 // * response_value -- boolean
+const { DataTypes } = require("sequelize")
+const { connection } = require("../db")
 
-const mongoose = require("mongoose")
 
-const responseSchema = mongoose.Schema({
-    survey_id: mongoose.Schema.Types.ObjectId,
-    question_id:Number,
-    response_value:Boolean
-})
+const responseSchema = {
+    id:{type:DataTypes.UUID,
+        primaryKey:true,
+        defaultValue:DataTypes.UUIDV4
+        },
+    survey_id:{
+        type:DataTypes.UUID,
+    },
+    question_id:{
+        type:DataTypes.INTEGER
+    },
+    response_value:{
+        type:DataTypes.BOOLEAN
+    }
+    
+}
 
-const ResponseModel = mongoose.model("response",responseSchema)
+
+const ResponseModel = connection.define("response",responseSchema,{timestamps:false})
 
 module.exports={
     ResponseModel,
