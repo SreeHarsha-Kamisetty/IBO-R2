@@ -72,58 +72,40 @@ Router.get("/survey/:survey_name/results",async(req,res)=>{
         const totalSurvey = survey.total_survey_taken
    
         SurveyModel.hasMany(ResponseModel, { foreignKey: 'survey_id' });
-ResponseModel.belongsTo(SurveyModel, { foreignKey: 'survey_id' });
-       let trueCount = await ResponseModel.count({
-        include: [
-            {
-              model: SurveyModel,
-              required: true, // INNER JOIN
-              on: {
-                survey_id: Sequelize.col('response.survey_id'), // Specify join condition
-              },
-            },
-          ],
-          where: {
-            response_value: true,
-          },
-        })
-        let falseCount = await ResponseModel.count({
-            include: [
-                {
-                  model: SurveyModel,
-                  required: true, // INNER JOIN
-                  on: {
-                    survey_id: Sequelize.col('response.survey_id'), // Specify join condition
-                  },
-                },
-              ],
-              where: {
-                response_value: false,
-              },
-            })
-            const question_breakup = await ResponseModel.findAll({
-                attributes: [
-                  'question_id',
-                  [
-                    Sequelize.literal('SUM(CASE WHEN response_value = true THEN 1 ELSE 0 END)'),
-                    'positiveResponses',
-                  ],
-                  [
-                    Sequelize.literal('SUM(CASE WHEN response_value = false THEN 1 ELSE 0 END)'),
-                    'negativeResponses',
-                  ],
-                ],
-                group: ['question_id'],
-                raw: true, // Get raw data instead of Sequelize instances
-              });
-              console.log('Question breakup:', question_breakup);
-        console.log(trueCount)
-             let overAll={
+        ResponseModel.belongsTo(SurveyModel, { foreignKey: 'survey_id' });
+
+        const trueFalseCounts = await ResponseModel.findAll({
+            attributes: [
+            [Sequelize.fn('SUM', Sequelize.literal('CASE WHEN response_value = true THEN 1 ELSE 0 END')), 'positiveResponses'],
+            [Sequelize.fn('SUM', Sequelize.literal('CASE WHEN response_value = false THEN 1 ELSE 0 END')), 'negativeResponses'],
+            ],
+            where: { survey_id: survey.survey_id },
+            raw: true,
+        });
+        const question_breakup = await ResponseModel.findAll({
+                    attributes: [
+                    'question_id',
+                    [
+                        Sequelize.literal('SUM(CASE WHEN response_value = true THEN 1 ELSE 0 END)'),
+                        'positiveResponses',
+                    ],
+                    [
+                        Sequelize.literal('SUM(CASE WHEN response_value = false THEN 1 ELSE 0 END)'),
+                        'negativeResponses',
+                    ],
+                    ],
+                    where:{survey_id:survey.survey_id},
+                    group: ['question_id'],
+                    raw: true, // Get raw data instead of Sequelize instances
+        });
+        
+        
+        let overAll={
             numberOfSurveysTaken:totalSurvey,
-            positiveResponses:trueCount,
-            negativeResponses:falseCount,
+            positiveResponses: trueFalseCounts[0].positiveResponses,
+            negativeResponses: trueFalseCounts[0].negativeResponses,
             breakUp:question_breakup
-        }
+    }
         res.status(200).json(overAll)
     } catch (error) {
         console.log(error)
