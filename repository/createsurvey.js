@@ -5,9 +5,6 @@ const { SurveyModel } = require("../models/survey.models");
 const createSurveyRepostory = async(data)=>{
     try {
         const  {surveyName,questions} = data
-        
-    // const new_survey = new SurveyModel({survey_name:surveyName})
-    //  await new_survey.save();
     const new_survey = await SurveyModel.create({survey_name:surveyName})
     
     const survey_id = new_survey.survey_id
