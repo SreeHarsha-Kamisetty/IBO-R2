@@ -18,7 +18,7 @@ app.listen(8080, async()=>{
        
         await connection.authenticate();
        
-        await connection.sync({force:true})
+        // await connection.sync({force:true})
         console.log("connected to DB")
         console.log(`Server running at port ${PORT}`)
     } catch (error) {

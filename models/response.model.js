@@ -10,7 +10,8 @@ const { connection } = require("../db")
 
 const responseSchema = {
     id:{type:DataTypes.UUID,
-        primaryKey:true
+        primaryKey:true,
+        defaultValue:DataTypes.UUIDV4
         },
     survey_id:{
         type:DataTypes.UUID,
